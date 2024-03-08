@@ -1,0 +1,141 @@
+create database DBExamenJr
+
+
+----------Crear tabla Categorias---------------
+
+
+create table ProductCategory(
+CategoryProductId int primary key identity,
+CategoryDescription varchar(200),
+IsActive char(1)
+)
+
+
+----------Procedimiento para listar---------------
+
+
+create procedure SP_Listar
+as
+begin
+	select * from Product
+end
+
+
+----------Tabla Product---------------
+
+
+create table Product(
+ProductId varchar(30) primary key,
+CategoryProductId int foreign key references ProductCategory(CategoryProductId),
+ProductDescription varchar(200),
+Stock int,
+Price float,
+HaveECDiscount char(1),
+IsActive char(1));
+
+
+----------Procedimiento para traer la lista de productos---------------
+
+
+create procedure SP_ListaProductos
+as
+begin
+	select d.ProductId, d.ProductDescription,
+	e.CategoryDescription,
+	d.Stock, d.Price, d.HaveECDiscount, d.IsActive
+	from ProductCategory as e
+	join Product as d on e.CategoryProductId = d.CategoryProductId
+end
+
+
+----------Procedimiento para guardar productos---------------
+
+
+create procedure SP_GuardarProducto(
+@ProductId varchar(30),
+@CategoryProductId int,
+@ProductDescription varchar(200),
+@Stock int,
+@Price float,
+@HaveECDiscount char(1),
+@IsActive char(1)
+)
+as
+begin
+	insert into Product(ProductId, CategoryProductId, ProductDescription, Stock, Price, HaveECDiscount, IsActive)
+	values
+	(@ProductId, @CategoryProductId, @ProductDescription, @Stock, @Price, @HaveECDiscount, @IsActive)
+end
+
+
+
+----------Procedimiento para editar productos---------------
+
+
+create procedure SP_EditarProducto(
+@ProductId varchar(30),
+@CategoryDescription varchar(200),
+@ProductDescription varchar(200),
+@Stock int,
+@Price float,
+@HaveECDiscount char(1),
+@IsActive char(1)
+)
+as
+begin
+	Declare @CategoryProductId int;
+	select @CategoryProductId = CategoryProductId
+	from ProductCategory
+	where CategoryDescription = @CategoryDescription
+
+	update Product set
+	CategoryProductId = @CategoryProductId,
+	ProductDescription = @ProductDescription,
+	Stock = @Stock,
+	Price = @Price,
+	HaveECDiscount = @HaveECDiscount,
+	IsActive = @IsActive
+	where ProductId = @ProductId
+
+end
+
+
+
+----------Procedimiento para eliminar productos---------------
+
+
+create procedure SP_EliminarProducto(
+@ProductId varchar)
+as
+begin
+	delete from Product where ProductId = @ProductId
+end
+
+
+----------Procedimiento para obtener productos---------------
+
+
+create procedure SP_Obtener(
+@ProductId varchar(30)
+)
+as
+begin
+	Declare @ProductId varchar(30)
+	select * from Product where ProductId = @ProductId
+	end
+
+
+
+----------Procedimiento creado para obtener los productos y luego poder editar aplicando la descripcion de la categoria---------------
+
+
+create procedure SP_ObtenerParaEditar(
+@ProductId varchar(30)
+)
+as
+begin
+	select d.ProductDescription, e.CategoryDescription, d.Stock, d.Price, d.HaveECDiscount, d.IsActive
+		from Product as d 
+		join ProductCategory as e on e.CategoryProductId = d.CategoryProductId
+		where ProductId = @ProductId
+	end

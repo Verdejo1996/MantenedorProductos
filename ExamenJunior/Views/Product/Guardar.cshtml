@@ -1,0 +1,46 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Guardar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        Nuevo Producto
+    </div>
+    <div class="card-body">
+        <form asp-action="Guardar" asp-controller="Product" method="post">
+            <div class="mb-3">
+                <label class="form-label">Codigo</label>
+                <input asp-for="ProductId" type="text" class="form-control">  
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Descripcion</label>
+                <input asp-for="ProductDescription" type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Codigo de Categoria (1: Tecnologia / 2: Hogar / 3: Deportes)</label>
+                <input asp-for="refProductCategory.CategoryProductId" type="number" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Stock</label>
+                <input asp-for="Stock" type="number" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Precio Unitario</label>
+                <input asp-for="Price" type="number" step="0.01" class="form-control">
+            </div>
+            <div class="mb-3 form-check">
+                <input asp-for="HaveECDiscount" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="exampleCheck1">Descuento Web?</label>
+            </div>
+            <div class="mb-3 form-check">
+                <input asp-for="IsActive" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="exampleCheck1">Activo</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-action="Listar" asp-controller="Product" class="btn btn-warning">Volver a la lista</a>
+        </form>
+    </div>
+</div>
+
